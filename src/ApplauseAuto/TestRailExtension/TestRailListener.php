@@ -42,7 +42,7 @@ use FoxFeatureContext;
 class TestRailListener implements EventSubscriberInterface
 {
 //    public function __construct(Mink $mink, $defaultSession, $javascriptSession, array $availableJavascriptSessions = array())
-    public function __construct($testrail_username, $testrail_password, $testrail_url, $testrun_basename, $testrun_description, $project_id, $testsuite_id, $create_new_suite, $container)
+    public function __construct($testrail_username, $testrail_password, $testrail_url, $testrun_basename, $testrun_description, $testrun_location, $project_id, $testsuite_id, $create_new_suite, $container)
     {
         $this->testcases=array();
         $this->testrail_username=$testrail_username;
@@ -50,6 +50,7 @@ class TestRailListener implements EventSubscriberInterface
         $this->testrail_url=$testrail_url;
         $this->testrun_basename=$testrun_basename;
         $this->testrun_description=$testrun_description;
+        $this->testrun_location=$testrun_location;
         $this->project_id=$project_id;
         $this->testsuite_id=$testsuite_id;
         $this->results_array=[];
@@ -163,6 +164,7 @@ class TestRailListener implements EventSubscriberInterface
         }
         else{
             $run_id=TestRailApiWrapper::create_new_testrun();
+            TestRailApiWrapper::set_runid($run_id);
         };
         print("Testrun #" . $run_id . " created\n");
     }
@@ -217,6 +219,7 @@ class TestRailListener implements EventSubscriberInterface
             $this->testrail_url,
             " " . $param . " " . $this->testrun_basename,
             $this->testrun_description,
+            $this->testrun_location,
             $this->project_id,
             $this->testsuite_id
         );
