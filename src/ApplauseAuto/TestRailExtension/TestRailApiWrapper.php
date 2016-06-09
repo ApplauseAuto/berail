@@ -34,7 +34,14 @@ class TestRailApiWrapper
         TestRailApiWrapper::$testrail_testplan_id = $testrail_testplan_id;
         TestRailApiWrapper::$testrail_project_id = $testrail_project_id;
         date_default_timezone_set('America/Chicago');
-        TestRailApiWrapper::$testrail_testrun_name = date("d-m-Y H:i:s") . $testrail_testrun_location . " Fox PHP " .  " " . $testrail_testrun_name; // test rail run name to include type of Local run
+        // for local runs, show the user that kicked off the run
+        $current_user = "";
+        if (preg_match("/LOCAL/i", $testrail_testrun_location)) {
+           $current_user = trim(shell_exec('whoami'));
+        TestRailApiWrapper::$testrail_testrun_name = date("d-m-Y H:i:s") . $testrail_testrun_location . " by " . $current_user . " Fox PHP " .  " " . $testrail_testrun_name; // test rail run name to include type of Local run
+        } else {
+           TestRailApiWrapper::$testrail_testrun_name = date("d-m-Y H:i:s") . $testrail_testrun_location . " Fox PHP " .  " " . $testrail_testrun_name; // test rail run name to include type of Local run
+        }
         TestRailApiWrapper::$testrail_testrun_description = $testrail_testrun_description;
 
         TestRailApiWrapper::$testrail_context = new TestRailAPIClient(TestRailApiWrapper::$testrail_url);
